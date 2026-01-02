@@ -5,7 +5,6 @@
 import { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from './store';
-import { shallow } from 'zustand/shallow';
 import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
@@ -22,28 +21,27 @@ const nodeTypes = {
   text: TextNode,
 };
 
-const selector = (state) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  getNodeID: state.getNodeID,
-  addNode: state.addNode,
-  onNodesChange: state.onNodesChange,
-  onEdgesChange: state.onEdgesChange,
-  onConnect: state.onConnect,
-});
+
 
 export const PipelineUI = () => {
     const reactFlowWrapper = useRef(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
-    const {
-      nodes,
-      edges,
-      getNodeID,
-      addNode,
-      onNodesChange,
-      onEdgesChange,
-      onConnect
-    } = useStore(selector, shallow);
+    
+    const nodesSelector = useCallback((state) => state.nodes, []);
+    const edgesSelector = useCallback((state) => state.edges, []);
+    const getNodeIDSelector = useCallback((state) => state.getNodeID, []);
+    const addNodeSelector = useCallback((state) => state.addNode, []);
+    const onNodesChangeSelector = useCallback((state) => state.onNodesChange, []);
+    const onEdgesChangeSelector = useCallback((state) => state.onEdgesChange, []);
+    const onConnectSelector = useCallback((state) => state.onConnect, []);
+    
+    const nodes = useStore(nodesSelector);
+    const edges = useStore(edgesSelector);
+    const getNodeID = useStore(getNodeIDSelector);
+    const addNode = useStore(addNodeSelector);
+    const onNodesChange = useStore(onNodesChangeSelector);
+    const onEdgesChange = useStore(onEdgesChangeSelector);
+    const onConnect = useStore(onConnectSelector);
 
     const getInitNodeData = (nodeID, type) => {
       let nodeData = { id: nodeID, nodeType: `${type}` };
