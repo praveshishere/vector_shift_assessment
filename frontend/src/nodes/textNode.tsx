@@ -1,12 +1,17 @@
-// textNode.js
+// textNode.tsx
 
-import { useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import React, { useState } from 'react';
+import { Handle, Position, NodeProps } from 'reactflow';
+import { NodeData } from '../store';
 
-export const TextNode = ({ id, data }) => {
+interface TextNodeData extends NodeData {
+  text?: string;
+}
+
+export const TextNode: React.FC<NodeProps<TextNodeData>> = ({ id, data }) => {
   const [currText, setCurrText] = useState(data?.text || '{{input}}');
 
-  const handleTextChange = (e) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrText(e.target.value);
   };
 

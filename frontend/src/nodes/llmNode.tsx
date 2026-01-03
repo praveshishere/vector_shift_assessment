@@ -1,8 +1,10 @@
-// llmNode.js
+// llmNode.tsx
 
-import { Handle, Position } from 'reactflow';
+import React from 'react';
+import { Handle, Position, NodeProps } from 'reactflow';
+import { NodeData } from '../store';
 
-export const LLMNode = ({ id, data }) => {
+export const LLMNode: React.FC<NodeProps<NodeData>> = ({ id }) => {
 
   return (
     <div style={{width: 200, height: 80, border: '1px solid black'}}>

@@ -1,6 +1,8 @@
-// submit.js
+// submit.tsx
 
-export const SubmitButton = () => {
+import React from 'react';
+
+export const SubmitButton: React.FC = () => {
 
     return (
         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

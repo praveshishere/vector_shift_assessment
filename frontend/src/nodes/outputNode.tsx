@@ -1,17 +1,23 @@
-// outputNode.js
+// outputNode.tsx
 
-import { useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import React, { useState } from 'react';
+import { Handle, Position, NodeProps } from 'reactflow';
+import { NodeData } from '../store';
 
-export const OutputNode = ({ id, data }) => {
+interface OutputNodeData extends NodeData {
+  outputName?: string;
+  outputType?: string;
+}
+
+export const OutputNode: React.FC<NodeProps<OutputNodeData>> = ({ id, data }) => {
   const [currName, setCurrName] = useState(data?.outputName || id.replace('customOutput-', 'output_'));
   const [outputType, setOutputType] = useState(data.outputType || 'Text');
 
-  const handleNameChange = (e) => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrName(e.target.value);
   };
 
-  const handleTypeChange = (e) => {
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setOutputType(e.target.value);
   };
 

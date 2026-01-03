@@ -1,8 +1,9 @@
-// toolbar.js
+// toolbar.tsx
 
+import React from 'react';
 import { DraggableNode } from './draggableNode';
 
-export const PipelineToolbar = () => {
+export const PipelineToolbar: React.FC = () => {
 
     return (
         <div style={{ padding: '10px' }}>

@@ -1,10 +1,10 @@
-// ui.js
+// ui.tsx
 // Displays the drag-and-drop UI
 // --------------------------------------------------
 
-import { useState, useRef, useCallback } from 'react';
-import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
-import { useStore } from './store';
+import React, { useState, useRef, useCallback } from 'react';
+import ReactFlow, { Controls, Background, MiniMap, ReactFlowInstance, NodeTypes, ConnectionLineType } from 'reactflow';
+import { useStore, NodeData } from './store';
 import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
@@ -14,7 +14,7 @@ import 'reactflow/dist/style.css';
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   customInput: InputNode,
   llm: LLMNode,
   customOutput: OutputNode,
@@ -23,17 +23,17 @@ const nodeTypes = {
 
 
 
-export const PipelineUI = () => {
-    const reactFlowWrapper = useRef(null);
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+export const PipelineUI: React.FC = () => {
+    const reactFlowWrapper = useRef<HTMLDivElement>(null);
+    const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     
-    const nodesSelector = useCallback((state) => state.nodes, []);
-    const edgesSelector = useCallback((state) => state.edges, []);
-    const getNodeIDSelector = useCallback((state) => state.getNodeID, []);
-    const addNodeSelector = useCallback((state) => state.addNode, []);
-    const onNodesChangeSelector = useCallback((state) => state.onNodesChange, []);
-    const onEdgesChangeSelector = useCallback((state) => state.onEdgesChange, []);
-    const onConnectSelector = useCallback((state) => state.onConnect, []);
+    const nodesSelector = useCallback((state: any) => state.nodes, []);
+    const edgesSelector = useCallback((state: any) => state.edges, []);
+    const getNodeIDSelector = useCallback((state: any) => state.getNodeID, []);
+    const addNodeSelector = useCallback((state: any) => state.addNode, []);
+    const onNodesChangeSelector = useCallback((state: any) => state.onNodesChange, []);
+    const onEdgesChangeSelector = useCallback((state: any) => state.onEdgesChange, []);
+    const onConnectSelector = useCallback((state: any) => state.onConnect, []);
     
     const nodes = useStore(nodesSelector);
     const edges = useStore(edgesSelector);
@@ -43,17 +43,17 @@ export const PipelineUI = () => {
     const onEdgesChange = useStore(onEdgesChangeSelector);
     const onConnect = useStore(onConnectSelector);
 
-    const getInitNodeData = (nodeID, type) => {
-      let nodeData = { id: nodeID, nodeType: `${type}` };
+    const getInitNodeData = (nodeID: string, type: string): NodeData => {
+      let nodeData: NodeData = { id: nodeID, nodeType: `${type}` };
       return nodeData;
     }
 
     const onDrop = useCallback(
-        (event) => {
+        (event: React.DragEvent<HTMLDivElement>) => {
           event.preventDefault();
     
-          const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-          if (event?.dataTransfer?.getData('application/reactflow')) {
+          const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
+          if (event?.dataTransfer?.getData('application/reactflow') && reactFlowBounds) {
             const appData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
             const type = appData?.nodeType;
       
@@ -62,26 +62,28 @@ export const PipelineUI = () => {
               return;
             }
       
-            const position = reactFlowInstance.project({
-              x: event.clientX - reactFlowBounds.left,
-              y: event.clientY - reactFlowBounds.top,
-            });
+            if (reactFlowInstance) {
+              const position = reactFlowInstance.project({
+                x: event.clientX - reactFlowBounds.left,
+                y: event.clientY - reactFlowBounds.top,
+              });
 
-            const nodeID = getNodeID(type);
-            const newNode = {
-              id: nodeID,
-              type,
-              position,
-              data: getInitNodeData(nodeID, type),
-            };
+              const nodeID = getNodeID(type);
+              const newNode = {
+                id: nodeID,
+                type,
+                position,
+                data: getInitNodeData(nodeID, type),
+              };
       
-            addNode(newNode);
+              addNode(newNode);
+            }
           }
         },
-        [reactFlowInstance]
+        [reactFlowInstance, getNodeID, addNode]
     );
 
-    const onDragOver = useCallback((event) => {
+    const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     }, []);
@@ -101,7 +103,7 @@ export const PipelineUI = () => {
                 nodeTypes={nodeTypes}
                 proOptions={proOptions}
                 snapGrid={[gridSize, gridSize]}
-                connectionLineType='smoothstep'
+                connectionLineType={ConnectionLineType.SmoothStep}
             >
                 <Background color="#aaa" gap={gridSize} />
                 <Controls />
