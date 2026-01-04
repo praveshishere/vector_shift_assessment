@@ -36,6 +36,19 @@ interface StoreState {
   onEdgesChange: (changes: EdgeChange[]) => void;
   onConnect: (connection: Connection) => void;
   updateNodeField: (nodeId: string, fieldName: string, fieldValue: any) => void;
+  connectNode: ({
+    source,
+    target,
+  }: {
+    source: {
+      nodeId: string;
+      handleId: string | null;
+    };
+    target: {
+      nodeId: string;
+      handleId: string | null;
+    };
+  }) => void;
 }
 
 export const useStore = create<StoreState>((set, get) => ({
@@ -71,6 +84,22 @@ export const useStore = create<StoreState>((set, get) => ({
       edges: addEdge(
         {
           ...connection,
+          type: "smoothstep",
+          animated: true,
+          markerEnd: { type: MarkerType.Arrow, height: 20, width: 20 },
+        },
+        get().edges
+      ),
+    });
+  },
+  connectNode: ({ source, target }) => {
+    set({
+      edges: addEdge(
+        {
+          source: source.nodeId,
+          target: target.nodeId,
+          sourceHandle: source.handleId,
+          targetHandle: target.handleId,
           type: "smoothstep",
           animated: true,
           markerEnd: { type: MarkerType.Arrow, height: 20, width: 20 },
