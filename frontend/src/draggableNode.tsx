@@ -17,23 +17,12 @@ export const DraggableNode: React.FC<DraggableNodeProps> = ({ type, label }) => 
   
     return (
       <div
-        className={type}
         onDragStart={(event) => onDragStart(event, type)}
         onDragEnd={(event) => (event.currentTarget.style.cursor = 'grab')}
-        style={{ 
-          cursor: 'grab', 
-          minWidth: '80px', 
-          height: '60px',
-          display: 'flex', 
-          alignItems: 'center', 
-          borderRadius: '8px',
-          backgroundColor: '#1C2536',
-          justifyContent: 'center', 
-          flexDirection: 'column'
-        }} 
+        className={`flex items-center py-4 w-20 justify-center cursor-grab rounded-sm ${type} border border-gray-200/60 bg-white shadow-md`}
         draggable
       >
-          <span style={{ color: '#fff' }}>{label}</span>
+          <span className='text-gray-900'>{label}</span>
       </div>
     );
   };

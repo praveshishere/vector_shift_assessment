@@ -5,10 +5,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap, ReactFlowInstance, NodeTypes, ConnectionLineType } from 'reactflow';
 import { useStore, NodeData } from './store';
-import { InputNode } from './nodes/inputNode';
-import { LLMNode } from './nodes/llmNode';
-import { OutputNode } from './nodes/outputNode';
-import { TextNode } from './nodes/textNode';
+import { InputNode, LLMNode, OutputNode, TextNode } from './composedNodes';
 
 import 'reactflow/dist/style.css';
 
@@ -16,12 +13,10 @@ const gridSize = 20;
 const proOptions = { hideAttribution: true };
 const nodeTypes: NodeTypes = {
   customInput: InputNode,
+  text: TextNode,
   llm: LLMNode,
   customOutput: OutputNode,
-  text: TextNode,
 };
-
-
 
 export const PipelineUI: React.FC = () => {
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
