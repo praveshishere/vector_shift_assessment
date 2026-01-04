@@ -1,8 +1,4 @@
-import {
-  Position,
-  NodeProps,
-  useUpdateNodeInternals,
-} from "reactflow";
+import { Position, NodeProps, useUpdateNodeInternals } from "reactflow";
 import { Node } from "./Node";
 import { useEffect, useState } from "react";
 import { NodeData, useStore } from "../store";
@@ -75,7 +71,6 @@ export const TextNode: React.FC<NodeProps<TextNodeProps>> = ({ id, data }) => {
     }, 0);
   }, [sourceNodeIds, id, updateNodeInternals, connectNode]);
 
-
   // Remove old edges references are removed
   const edges = useStore((state) => state.edges);
   const onEdgesChange = useStore((state) => state.onEdgesChange);
@@ -107,6 +102,7 @@ export const TextNode: React.FC<NodeProps<TextNodeProps>> = ({ id, data }) => {
       title="Text"
       id={id}
       className="w-fit"
+      description="Accept Text from upstream nodes and allows you to write additional text / concatenate different texts to pass to downstream nodes"
     >
       <Node.Body className="overflow-visible container">
         <label className="grid grid-cols-1 gap-1 text-sm mt-2">

@@ -5,6 +5,7 @@ import { cn } from "../utils/cn";
 
 interface NodeContextType {
   title: string;
+  description: string;
   name: string;
   setName: (name: string) => void;
   hasCustomLabel: boolean;
@@ -41,6 +42,7 @@ const hasComponentType = (
 interface NodeProps {
   children?: React.ReactNode;
   title?: string;
+  description?: string;
   handles?: {
     position: Position;
     type: "source" | "target";
@@ -55,7 +57,14 @@ export const Node: React.FC<NodeProps> & {
   Header: React.FC<HeaderProps>;
   Body: React.FC<BodyProps>;
   Label: React.FC<LabelProps>;
-} = ({ children, handles = [], title = "Node", id = "", className }) => {
+} = ({
+  children,
+  handles = [],
+  title = "Node",
+  id = "",
+  description = "",
+  className,
+}) => {
   const [name, setName] = useState(id);
 
   const hasCustomHeader = hasComponentType(children, Node.Header);
@@ -63,6 +72,7 @@ export const Node: React.FC<NodeProps> & {
 
   const contextValue: NodeContextType = {
     title,
+    description,
     name,
     setName,
     hasCustomLabel,
@@ -72,7 +82,7 @@ export const Node: React.FC<NodeProps> & {
     <NodeContext.Provider value={contextValue}>
       <div
         className={cn(
-          "min-w-[200px] min-h-[80px] border border-indigo-900/60 grid grid-cols-1 rounded-sm",
+          "min-w-64 min-h-[80px] border border-indigo-900/60 grid grid-cols-1 rounded-sm",
           className
         )}
       >
@@ -100,27 +110,34 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ children, className }) => {
-  const { title } = useNodeContext();
+  const { title, description } = useNodeContext();
 
   if (!children) {
     return (
       <div
         className={cn(
-          "flex justify-between gap-3 py-1 px-2 m-1 bg-indigo-100 rounded-sm border border-indigo-300 h-fit",
+          "bg-indigo-100 rounded-sm border border-indigo-300 h-fit py-1 px-2 m-1 max-w-80",
           className
         )}
       >
-        <div className="flex items-center gap-3 text-gray-900">
-          <div className="font-medium text-sm">{title}</div>
+        <div className="flex justify-between gap-3">
+          <div className="flex items-center gap-3 text-gray-900">
+            <div className="font-medium text-sm">{title}</div>
+          </div>
+          <div className="">
+            <button
+              className="text-gray-900 h-fit rounded-sm hover:cursor-pointer"
+              title="Delete Node"
+            >
+              <CircleX className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-        <div className="">
-          <button
-            className="text-gray-900 h-fit rounded-sm hover:cursor-pointer"
-            title="Delete Node"
-          >
-            <CircleX className="w-4 h-4" />
-          </button>
-        </div>
+        {description && (
+          <div className="text-[0.5rem] text-gray-900 min-w-0 text-wrap">
+            {description}
+          </div>
+        )}
       </div>
     );
   }
