@@ -5,7 +5,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap, ReactFlowInstance, NodeTypes, ConnectionLineType } from 'reactflow';
 import { useStore, NodeData } from './store';
-import { InputNode, LLMNode, OutputNode, TextNode } from './composedNodes';
+import { InputNode, LLMNode, OutputNode, TextNode, FileNode } from './composedNodes';
 
 import 'reactflow/dist/style.css';
 
@@ -16,6 +16,7 @@ const nodeTypes: NodeTypes = {
   text: TextNode,
   llm: LLMNode,
   customOutput: OutputNode,
+  file: FileNode,
 };
 
 export const PipelineUI: React.FC = () => {
